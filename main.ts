@@ -1,6 +1,5 @@
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile0`, function (sprite, location) {
-    let mySprite: Sprite = null
-    tiles.placeOnRandomTile(mySprite, sprites.builtin.forestTiles0)
+    tiles.placeOnRandomTile(Money, sprites.builtin.forestTiles0)
 })
 controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
     if (money_jump_count <= 1) {
