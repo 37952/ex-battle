@@ -1,5 +1,12 @@
+namespace SpriteKind {
+    export const p1 = SpriteKind.create()
+    export const pro = SpriteKind.create()
+}
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile0`, function (sprite, location) {
     tiles.placeOnRandomTile(sprite, sprites.builtin.forestTiles0)
+    if (sprite == Money) {
+        info.changeLifeBy(-1)
+    }
 })
 controller.player2.onButtonEvent(ControllerButton.B, ControllerButtonEvent.Pressed, function () {
     if (joejoe_jump_count <= 1) {
@@ -14,7 +21,7 @@ controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
     }
 })
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
-    projectile = sprites.createProjectileFromSprite(img`
+    projectilem = sprites.createProjectileFromSprite(img`
         . . . . . . . . . . 
         . . . 7 7 7 7 . . . 
         . . 7 8 8 8 8 7 . . 
@@ -26,12 +33,13 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
         . . . 7 7 7 7 . . . 
         . . . . . . . . . . 
         `, Money, 201, -10)
+    projectilem.setKind(SpriteKind.pro)
     if (Money.image == money_left_image) {
-        projectile.vx = projectile.vx * -1
+        projectilem.vx = projectilem.vx * -1
     }
 })
 controller.player2.onButtonEvent(ControllerButton.A, ControllerButtonEvent.Pressed, function () {
-    projectile = sprites.createProjectileFromSprite(img`
+    footballprojectile = sprites.createProjectileFromSprite(img`
         . . 6 6 6 6 . . 
         . 6 d 4 4 4 b . 
         . c b 1 1 4 4 b 
@@ -39,8 +47,21 @@ controller.player2.onButtonEvent(ControllerButton.A, ControllerButtonEvent.Press
         . . c b b d 1 c 
         . . . c c b b . 
         `, joejoe, 201, -10)
+    footballprojectile.setKind(SpriteKind.p1)
     if (joejoe.image == joejoe_left_image) {
-        projectile.vx = projectile.vx * -1
+        footballprojectile.vx = footballprojectile.vx * -1
+    }
+})
+sprites.onOverlap(SpriteKind.pro, SpriteKind.Player, function (sprite, otherSprite) {
+    if (otherSprite == joejoe) {
+        info.player2.changeLifeBy(-1)
+        sprites.destroy(sprite)
+    }
+})
+sprites.onOverlap(SpriteKind.p1, SpriteKind.Player, function (sprite, otherSprite) {
+    if (otherSprite == Money) {
+        info.player1.changeLifeBy(-1)
+        sprites.destroy(sprite)
     }
 })
 function create_joejoe () {
@@ -67,6 +88,7 @@ function create_joejoe () {
     joejoe = sprites.create(joejoe_left_image, SpriteKind.Player)
     controller.player2.moveSprite(joejoe, 100, 0)
     joejoe.ay = GRAVITY
+    info.player2.setLife(71)
 }
 function create_money () {
     money_left_image = img`
@@ -92,14 +114,16 @@ function create_money () {
     Money = sprites.create(money_left_image, SpriteKind.Player)
     controller.moveSprite(Money, 100, 0)
     Money.ay = GRAVITY
+    info.setLife(71)
 }
 let money_right_image: Image = null
 let joejoe_right_image: Image = null
 let joejoe_left_image: Image = null
+let footballprojectile: Sprite = null
 let money_left_image: Image = null
-let projectile: Sprite = null
-let Money: Sprite = null
+let projectilem: Sprite = null
 let joejoe: Sprite = null
+let Money: Sprite = null
 let joejoe_jump_count = 0
 let money_jump_count = 0
 let GRAVITY = 0
