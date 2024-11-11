@@ -5,7 +5,9 @@ namespace SpriteKind {
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile0`, function (sprite, location) {
     tiles.placeOnRandomTile(sprite, sprites.builtin.forestTiles0)
     if (sprite == Money) {
-        info.changeLifeBy(-1)
+        info.player1.changeLifeBy(-1)
+    } else if (sprite == joejoe) {
+        info.player2.changeLifeBy(-1)
     }
 })
 controller.player2.onButtonEvent(ControllerButton.B, ControllerButtonEvent.Pressed, function () {
@@ -116,6 +118,12 @@ function create_money () {
     Money.ay = GRAVITY
     info.setLife(71)
 }
+info.player1.onLifeZero(function () {
+    game.splash("p2 wins")
+})
+info.player2.onLifeZero(function () {
+    game.splash("p1 wins")
+})
 let money_right_image: Image = null
 let joejoe_right_image: Image = null
 let joejoe_left_image: Image = null
